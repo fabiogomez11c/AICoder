@@ -50,13 +50,11 @@ class Chat(BaseModel):
     ai_response: str
 
 
-def invoke_ai():
+def invoke_ai(message: str):
     """Script to invoke the AI"""
     client = create_openai_client()
     model = "gpt-3.5-turbo"
-    messages = [
-        {"role": "user", "content": "Hello, how can I improve my coding skills?"}
-    ]
+    messages = [{"role": "user", "content": message}]
     response_model = Chat
 
     response = create_response(client, model, messages, response_model)
