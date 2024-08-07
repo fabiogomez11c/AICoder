@@ -7,6 +7,10 @@ from openai import OpenAI
 import instructor
 import yaml
 
+from fastapi import FastAPI
+
+app = FastAPI()
+
 
 def read_yml_config(file_path: str) -> Dict[str, Any]:
     """
