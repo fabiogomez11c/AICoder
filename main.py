@@ -50,8 +50,8 @@ class Chat(BaseModel):
     ai_response: str
 
 
-# Dummy example to create a response
-if __name__ == "__main__":
+def invoke_ai():
+    """Script to invoke the AI"""
     client = create_openai_client()
     model = "gpt-3.5-turbo"
     messages = [
@@ -60,13 +60,4 @@ if __name__ == "__main__":
     response_model = Chat
 
     response = create_response(client, model, messages, response_model)
-    print(response.ai_response)
-
-
-# def generate(
-#     prompt: BasePrompt, model: str, input_: Dict[str, str], **kwargs
-# ) -> BaseModel:
-#     """
-#     Generate a response from the LLM chat, the result should be a valid pydantic model.
-#     """
-#     pass
+    return response.ai_response
