@@ -51,18 +51,25 @@ def create_response(client, model, messages, response_model, **kwargs):
 
 
 class Chat(BaseModel):
-    ai_response: str
+    # The code attribute represents the programming code as a string.
+    code: str
 
 
 def invoke_ai(message: str):
     """Script to invoke the AI"""
     client = create_openai_client()
-    model = "gpt-3.5-turbo"
-    messages = [{"role": "user", "content": message}]
+    model = "gpt-4o-mini"
+    messages = [
+        {
+            "role": "system",
+            "content": "You are an AI coding assistant, expert in good practices and good quality of code.",
+        },
+        {"role": "user", "content": message},
+    ]
     response_model = Chat
 
     response = create_response(client, model, messages, response_model)
-    return response.ai_response
+    return response.code
 
 
 class UserInput(BaseModel):
@@ -73,4 +80,4 @@ class UserInput(BaseModel):
 async def get_ai_response(user_input: UserInput):
     """Endpoint to get AI response"""
     ai_response = invoke_ai(user_input.message)
-    return {"ai_response": ai_response}
+    return {"response": ai_response}
