@@ -1,7 +1,8 @@
 """Script with the main"""
 
 from typing import Dict, Any
-from pydantic import BaseModel
+
+# from pydantic import BaseModel
 from openai import OpenAI
 import instructor
 import yaml
@@ -19,38 +20,36 @@ def read_yml_config(file_path: str) -> Dict[str, Any]:
     return config
 
 
+def create_openai_client():
+    """Create the instructor client for OpenAI"""
+    config = read_yml_config("./config.yaml")
+    openai = config.get("openai")
+    if openai:
+        api_key = openai.get("key")
+    else:
+        raise ValueError("OpenAI api key failed")
+    client = OpenAI(api_key=api_key)
+    client = instructor.from_openai(client=client, mode=instructor.Mode.TOOLS)
+    return client
+
+
 def create_response(client, model, messages, response_model, **kwargs):
     """Create a response using the instructor client"""
+    config = read_yml_config("./config.yaml")
     return client.chat.completions.create(
         model=model,
         response_model=response_model,
         messages=messages,
-        max_retries=CONFIG.get("llm").get("instructor_max_retries", 5),
-        temperature=CONFIG.get("llm").get("temperature", 1),
+        max_retries=config.get("llm", {}).get("instructor_max_retries", 5),
+        temperature=config.get("llm", {}).get("temperature", 1),
         **kwargs
     )
 
 
-def generate(
-    prompt: BasePrompt, model: str, input_: Dict[str, str], **kwargs
-) -> BaseModel:
-    """
-    Generate a response from the LLM chat, the result should be a valid pydantic model.
-    """
-
-    messages = [
-        {
-            "role": "system",
-            "content": "You are an expert in content creation/writing with a highly focus on coherence.",
-        },
-        {"role": "user", "content": prompt.prompt_template.format(**input_)},
-    ]
-
-    result = create_response(
-        client=create_openai_client(),
-        model=model,
-        messages=messages,
-        response_model=prompt.pydantic_model,
-        **kwargs
-    )
-    return result
+# def generate(
+#     prompt: BasePrompt, model: str, input_: Dict[str, str], **kwargs
+# ) -> BaseModel:
+#     """
+#     Generate a response from the LLM chat, the result should be a valid pydantic model.
+#     """
+#     pass
