@@ -2,7 +2,7 @@
 
 from typing import Dict, Any
 
-# from pydantic import BaseModel
+from pydantic import BaseModel
 from openai import OpenAI
 import instructor
 import yaml
@@ -44,6 +44,23 @@ def create_response(client, model, messages, response_model, **kwargs):
         temperature=config.get("llm", {}).get("temperature", 1),
         **kwargs
     )
+
+
+class Chat(BaseModel):
+    ai_response: str
+
+
+# Dummy example to create a response
+if __name__ == "__main__":
+    client = create_openai_client()
+    model = "gpt-3.5-turbo"
+    messages = [
+        {"role": "user", "content": "Hello, how can I improve my coding skills?"}
+    ]
+    response_model = Chat
+
+    response = create_response(client, model, messages, response_model)
+    print(response.ai_response)
 
 
 # def generate(
