@@ -22,7 +22,7 @@ def read_yml_config(file_path: str) -> Dict[str, Any]:
 
 def create_openai_client():
     """Create the instructor client for OpenAI"""
-    config = read_yml_config("./config.yaml")
+    config = read_yml_config("./keys.yaml")
     openai = config.get("openai")
     if openai:
         api_key = openai.get("key")
