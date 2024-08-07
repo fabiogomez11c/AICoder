@@ -1,0 +1,3 @@
+llm:
+  instructor_max_retries: 5
+  temperature: 0.5
