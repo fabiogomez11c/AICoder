@@ -59,3 +59,14 @@ def invoke_ai(message: str):
 
     response = create_response(client, model, messages, response_model)
     return response.ai_response
+
+
+class UserInput(BaseModel):
+    message: str
+
+
+@app.post("/")
+async def get_ai_response(user_input: UserInput):
+    """Endpoint to get AI response"""
+    ai_response = invoke_ai(user_input.message)
+    return {"ai_response": ai_response}
